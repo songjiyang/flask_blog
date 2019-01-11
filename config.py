@@ -10,11 +10,11 @@ class Config:
     MAIL_SERVER = 'smtp.qq.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = '2535199139'
-    MAIL_PASSWORD = 'ufxffdwmwtvleadd'
-    MAIL_DEFAULT_SENDER = '2535199139@qq.com'
+    MAIL_USERNAME = '352553647@qq.com'
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = '352553647@qq.com'
     FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <2535199139@qq.com>'
+    FLASKY_MAIL_SENDER = '352553647@qq.com'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     FLASKY_POSTS_PER_PAGE = 20
     FLASKY_FOLLOWERS_PER_PAGE = 50
