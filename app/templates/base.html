@@ -1,533 +1,427 @@
-{% extends "bootstrap_base.html" %}
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title> ModularAdmin - Free Dashboard Theme | HTML Version </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="#">
+        <!-- Place favicon.ico in the root directory -->
+        {% block styles %}
+        <link rel="stylesheet" href="{{ url_for('static', filename = 'css/vendor.css') }}">
+        <!-- Theme initialization -->
+        {% endblock %}
+        {% block scripts %}
+        <script>
+            var themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
+            {};
+            var themeName = themeSettings.themeName || '';
+            if (themeName)
+            {
+                document.write('<link rel="stylesheet" id="theme-style" href="/static/css/app-' + themeName + '.css">');
+            }
+            else
+            {
+                document.write('<link rel="stylesheet" id="theme-style" href="/static/css/app.css">');
+            }
+        </script>
+                <script>
+            (function(i, s, o, g, r, a, m)
+            {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function()
+                {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+            ga('create', 'UA-80463319-4', 'auto');
+            ga('send', 'pageview');
+        </script>
+        <script src="{{ url_for('static', filename = 'js/vendor.js') }}"></script>
+        <script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
+        {% endblock %}
+    </head>
+    <body>
+        <div class="main-wrapper">
+            <div class="app" id="app">
+                <header class="header">
+                    <div class="header-block header-block-collapse d-lg-none d-xl-none">
+                        <button class="collapse-btn" id="sidebar-collapse-btn">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="header-block header-block-search">
+                        <form role="search">
+                            <div class="input-container">
+                                <i class="fa fa-search"></i>
+                                <input type="search" placeholder="Search">
+                                <div class="underline"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="header-block header-block-nav">
+                        <ul class="nav-profile">
+                            {% if current_user.is_authenticated %}
+                            <li class="notifications new">
+                                <a href="" data-toggle="dropdown">
+                                    <i class="fa fa-bell-o"></i>
+                                    <sup>
+                                        <span class="counter">{{ current_user.unreadmessages()}}</span>
+                                    </sup>
+                                </a>
+                                <div class="dropdown-menu notifications-dropdown-menu">
+                                    <ul class="notifications-container">
+                                        <li>
+                                            <a href="" class="notification-item">
+                                                <div class="img-col">
+                                                    <div class="img" style="background-image: url('/static/assets/faces/8.jpg')"></div>
+                                                </div>
+                                                <div class="body-col">
+                                                    <p>
+                                                        <span class="accent">{{ current_user.lastmessageform().username }}</span> 对你说:
+                                                        <span class="accent">{{ current_user.lastmessage().body }}</span>. </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" class="notification-item">
+                                                <div class="img-col">
+                                                    <div class="img" style="background-image: url('assets/faces/5.jpg')"></div>
+                                                </div>
+                                                <div class="body-col">
+                                                    <p>
+                                                        <span class="accent">Amaya Hatsumi</span> started new task:
+                                                        <span class="accent">Dashboard UI design.</span>. </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" class="notification-item">
+                                                <div class="img-col">
+                                                    <div class="img" style="background-image: url('/static/assets/faces/8.jpg')"></div>
+                                                </div>
+                                                <div class="body-col">
+                                                    <p>
+                                                        <span class="accent">Andy Nouman</span> deployed new version of
+                                                        <span class="accent">NodeJS REST Api V3</span>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <footer>
+                                        <ul>
+                                            <li>
+                                                <a href=""> View All </a>
+                                            </li>
+                                        </ul>
+                                    </footer>
+                                </div>
+                            </li>
 
-{% block head %} <!-- headstart -->
+                            <li class="profile dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <div class="img" style="background-image: url('https://avatars3.githubusercontent.com/u/3959008?v=3&s=40')"> </div>
+                                    <span class="name"> John Doe </span>
+                                </a>
+                                <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <a class="dropdown-item" href="{{ url_for('main.user', username=current_user.username) }}">
+                                        <i class="fa fa-user icon"></i> Profile </a>
+                                    <a class="dropdown-item" href="{{ url_for('main.showmessage') }}">
+                                        <i class="fa fa-bell icon"></i> Notifications </a>
+                                    <a class="dropdown-item" href="{{ url_for('auth.change_userset') }}">
+                                        <i class="fa fa-gear icon"></i> Settings </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                        <i class="fa fa-power-off icon"></i> Logout </a>
+                                </div>
+                            </li>
+                            {% else %}
+                                <button  type="button" class="btn btn-oval btn-info" style="margin-right:20px"><a href="{{ url_for('auth.register') }}">Register</a></button>
 
-{% block metas %}
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-<title>{% block title %}{% endblock %}</title>
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-{% endblock%}
-<link rel="icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}"
-type="image/x-icon">
-    
-{% block styles %}
-    <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=1523741413" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/styles.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> <!-- 提供通知小图标 -->
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="{{url_for('static',filename='css/ionicons.min.css')}}"> 
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{url_for('static',filename='css/AdminLTE.min.css')}}">
-    
-    <link rel="stylesheet" href="{{url_for('static',filename='css/skin-blue.min.css')}}">
-<!--     <script>var _hmt = _hmt || [];(function() {  var hm = document.createElement("script");  hm.src = "//hm.baidu.com/hm.js?4ef56ac18f75724ce187ba84286f0c6d";  var s = document.getElementsByTagName("script")[0];   s.parentNode.insertBefore(hm, s);})();</script> -->
-{% endblock %}
-{% endblock %} <!-- headend -->
-
-{% block navbar %}
-<header class="main-header" style="position: fixed;top: 0px;width:100%;max-height:100px;z-index:1030"> <!-- 固定置顶 -->
-    <a href="{{ url_for('main.index') }}" class="logo">
-      <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>F</b>ly</span>
-      <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>梦开始的地方</b></span>
-    </a>
-    <nav class="navbar navbar-static-top" role="navigation">
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-        <span class="sr-only">Toggle navigation</span>
-        </a>
-              <div class="navbar-header">            
-                <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('main.firstpage') }}">关于</a></li>
-                </ul>          
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('main.index') }}">博客主页</a></li>
-                    {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('main.user', username=current_user.username) }}">个人中心</a></li>
-                    {% endif %}
-                </ul>
-                    <ul class="nav navbar-nav">
-                    {% if current_user.can(Permission.MODERATE_COMMENTS) %}
-                    <li><a href="{{ url_for('main.moderate') }}">管理评论</a></li>
-                    {% endif %}
-
-                    {% if not current_user.is_authenticated %} 
-                    <li><a href="{{ url_for('auth.register') }}">注册</a> </li>
-                    <li><a href="{{ url_for('auth.login') }}">登录</a> </li>
-                    {% endif %}
-                    <li><a href="{{ url_for('main.video') }}">放松一下</a> </li>
-                    <li><a href="{{ url_for('admin.edit') }}">后台管理</a> </li>
-
-                </ul>
-
-              </div>
-
-              {% if current_user.is_authenticated %}
-              <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                  <!-- Messages: style can be found in dropdown.less-->
-                  <li class="dropdown messages-menu">
-                    <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                      <i class="fa fa-envelope-o"></i>
-                      <span class="label label-success">{{ current_user.unreadmessages()}} </span>
-                    </a>                
-                    <ul class="dropdown-menu">
-                      <li class="header">你有 {{ current_user.unreadmessages()}} 条未读私信</li>
-                      <li>
-                        <!-- inner menu: contains the messages -->
-                        {% if current_user.unreadmessages() > 0 %}
-                        <ul class="menu">
-                          <li><!-- start message -->
-                            <a href="{{ url_for('main.showmessage') }}">
-                              <div class="pull-left">                                     
-                                <!-- User Image -->  
-                                {% if current_user.is_authenticated %}                          
-                                <!-- <img src="{{url_for('static',filename='img/my.jpg')}}" class="img-circle" alt="User Image"> -->
-                                <img class="user-image" alt="User Image" src="{{ current_user.lastmessageform().gravatar(size=256) }}">
-                                {% endif %}
-                              </div>
-                              <!-- Message title and timestamp -->                               
-                              <h4>                                    
-                                <small><i class="fa fa-clock-o"></i> 最近的消息</small>
-                              <br>
-                              </h4>
-                              <!-- The message -->
-                              <p>{{ current_user.lastmessageform().username }}对你说:{{ current_user.lastmessage().body }}</p>
-                            </a>
-                          </li><!-- end message -->
-                        </ul><!-- /.menu -->
-                        </li>
-                        {% else %}
-                        <ul class="menu">
-                          <li><!-- start message -->
-                            <a href="{{ url_for('main.showmessage') }}">
-                            <h4>   
-                                最近没有消息                                
-                                <small><i class="fa fa-clock-o"></i> 最近的消息</small>
-                            </h4>
-                            </a>
-                          </li>
-                        </ul>   
-                        {% endif %}
-
-                      <li class="footer"><a href="{{ url_for('main.showmessage') }}">查看全部私信</a></li>
-                    </ul>
-                  </li><!-- /.messages-menu -->
-
-                  <li class="dropdown messages-menu">
-                    <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                      <i class="fa fa-bell-o"></i>
-                      <span class="label label-warning">{{ current_user.unreadcommenteds()}} </span>
-                    </a>                
-                    <ul class="dropdown-menu">
-                      <li class="header">你有 {{ current_user.unreadcommenteds() }} 条未读评论</li>
-                      <li>
-                        <!-- inner menu: contains the messages -->
-                        {% if current_user.commented.count() > 0  %}
-                        <ul class="menu">
-                          <li><!-- start message -->
-                            <a href="{{ url_for('main.shownotice') }}">
-                              <div class="pull-left">
-                                <!-- User Image -->  
-                                {% if current_user.is_authenticated %}                          
-                                <!-- <img src="{{url_for('static',filename='img/my.jpg')}}" class="img-circle" alt="User Image"> -->
-                                <img class="user-image" alt="User Image" src="{{ current_user.lastcommentform().gravatar(size=256) }}">
-                                {% endif %}
-                              </div>
-                              <!-- Message title and timestamp -->
-                              <h4>                                    
-                                <small><i class="fa fa-clock-o"></i> 最近的评论</small>
-                              </h4>
-                              <br>
-                              <!-- The message -->
-                              <p>{{ current_user.lastcommentform().username }}发表了评论:{{ current_user.lastcomment().body }}</p>
-                            </a>
-                          </li><!-- end message -->
-                        </ul><!-- /.menu -->
-                        {% else %}
-                        <ul class="menu">
-                          <li><!-- start message -->
-                            <a href="{{ url_for('main.shownotice') }}">
-                            <h4>   
-                            最近没有新的评论                         
-                                <small><i class="fa fa-clock-o"></i> 最近的消息</small>
-                            </h4>
-                            </a>
-                          </li>
-                        </ul> 
-                        {% endif %}
-                      </li>
-                      <li class="footer"><a href="{{ url_for('main.shownotice') }}">查看全部评论</a></li>
-                    </ul>
-                  </li><!-- /.notice -->
-
-                  <!-- Tasks Menu -->
-                  <li class="dropdown messages-menu">
-                    <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                      <i class="fa fa-flag-o"></i>
-                      <span class="label label-warning">{{ current_user.unreadwebpushs()}} </span>
-                    </a>                
-                    <ul class="dropdown-menu">
-                      <li class="header">你有 {{ current_user.unreadwebpushs()}} 条未读订阅</li>
-                      <li>
-                        <!-- inner menu: contains the messages -->
-                        {% if current_user.unreadwebpushs() > 0  %}
-                        <ul class="menu">
-                          <li><!-- start message -->
-                            <a href="{{ url_for('main.showwebpush',username=current_user.username) }}">
-                              <div class="pull-left">
-                                <!-- User Image -->  
-                                {% if current_user.is_authenticated %}                          
-                                <img class="user-image" alt="User Image" src="{{ current_user.lastwebpush().post.author.gravatar(size=256) }}">
-                                {% endif %}
-                              </div>
-                              <!-- Message title and timestamp -->
-                              <h4>                                    
-                                <small><i class="fa fa-clock-o"></i> 最近更新</small>
-                              </h4>
-                              <br>
-                              <!-- The message -->
-                              <p>{{ current_user.lastwebpush().post.author.username }}发表了文章:{{ current_user.lastwebpush().post.head }}</p>
-                            </a>
-                          </li><!-- end message -->
-                        </ul><!-- /.menu -->
-                        {% else %}
-                        <ul class="menu">
-                          <li><!-- start message -->
-                            <a href="{{ url_for('main.showwebpush',username=current_user.username) }}">
-                            <h4>   
-                            最近没有更新                         
-                                <small><i class="fa fa-clock-o"></i> 最近更新</small>
-                            </h4>
-                            </a>
-                          </li>
-                        </ul> 
-                        {% endif %}
-                      </li>
-                      <li class="footer"><a href="{{ url_for('main.showwebpush',username=current_user.username) }}">查看全部订阅</a></li>
-                    </ul>
-                  </li><!-- /.notice -->
-                  
-                  
-                  {% endif %}
-                  <!-- 用户头像 -->
-                  {% if current_user.is_authenticated %}
-                  <li class="dropdown user user-menu">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                      <!-- The user image in the navbar-->
-                      <!-- <img src="{{url_for('static',filename='img/my.jpg')}}" class="user-image" alt="User Image"> -->
-                      <img class="user-image" alt="User Image" src="{{ current_user.gravatar(size=256) }}">
-                      <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                      <span class="hidden-xs">愚蠢的人类</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                      <!-- The user image in the menu -->
-                      <li class="user-header">
-                        <img class="img-circle"  alt="User Image" src="{{ current_user.gravatar(size=256) }}">
-                          <p>
-                          愚蠢的人类，信仰圣光吧！！ 
-                          <small>
-                          <script >
-                          // var mydate=new Date();
-                          document.write((new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString());
-                          </script>                            
-                          </small>                                    
-                          </p>  
-                      </li>   
-
-                      <li class="user-footer">
-
-                        <div class="pull-left">
-                          <a href="{{ url_for('auth.change_userset') }}" class="btn btn-default btn-flat">账户设置</a>
+                            <button type="button" class="btn btn-oval btn-success"><a href="{{ url_for('auth.login') }}">Login</a></button>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </header>
+                <aside class="sidebar">
+                    <div class="sidebar-container">
+                        <div class="sidebar-header">
+                            <div class="brand">
+                                <div class="logo">
+                                    <span class="l l1"></span>
+                                    <span class="l l2"></span>
+                                    <span class="l l3"></span>
+                                    <span class="l l4"></span>
+                                    <span class="l l5"></span>
+                                </div> Fly </div>
                         </div>
-                        <div class="pull-right">
-                          <a href="{{ url_for('auth.logout') }}" class="btn btn-default btn-flat">退出</a>
+                        <nav class="menu">
+                            <ul class="sidebar-menu metismenu" id="sidebar-menu">
+                                <li class="active">
+                                    <a href="{{ url_for('main.index') }}">
+                                        <i class="fa fa-home"></i> 首页 </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <i class="fa fa-th-large"></i> 文章分类
+                                        <i class="fa arrow"></i>
+                                    </a>
+                                    <ul class="sidebar-nav">
+                                        {% for category in g.categorys %}
+                                        <li>
+                                            <a href="{{ url_for('main.category', id=category.id) }}">{{category.name}}({{category.posts.count()}})</a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <i class="fa fa-fire"></i> 热门文章
+                                        <i class="fa arrow"></i>
+                                    </a>
+                                    <ul class="sidebar-nav">
+                                       {% for hot_post in g.hot_post %}
+                                        <li>
+                                            <a href="{{ url_for('main.post', id=hot_post.id) }}">No{{loop.index}}. {{hot_post.head}}</a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('main.firstpage') }}">
+                                        <i class="fa fa-file-text-o"></i> 关于小站
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <footer class="sidebar-footer">
+                        <ul class="sidebar-menu metismenu" id="customize-menu">
+                            <li>
+                                <ul>
+                                    <li class="customize">
+                                        <div class="customize-item">
+                                            <div class="row customize-header">
+                                                <div class="col-4"> </div>
+                                                <div class="col-4">
+                                                    <label class="title">fixed</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="title">static</label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <label class="title">Sidebar:</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label>
+                                                        <input class="radio" type="radio" name="sidebarPosition" value="sidebar-fixed">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label>
+                                                        <input class="radio" type="radio" name="sidebarPosition" value="">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <label class="title">Header:</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label>
+                                                        <input class="radio" type="radio" name="headerPosition" value="header-fixed">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label>
+                                                        <input class="radio" type="radio" name="headerPosition" value="">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <label class="title">Footer:</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label>
+                                                        <input class="radio" type="radio" name="footerPosition" value="footer-fixed">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label>
+                                                        <input class="radio" type="radio" name="footerPosition" value="">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="customize-item">
+                                            <ul class="customize-colors">
+                                                <li>
+                                                    <span class="color-item color-red" data-theme="red"></span>
+                                                </li>
+                                                <li>
+                                                    <span class="color-item color-orange" data-theme="orange"></span>
+                                                </li>
+                                                <li>
+                                                    <span class="color-item color-green active" data-theme=""></span>
+                                                </li>
+                                                <li>
+                                                    <span class="color-item color-seagreen" data-theme="seagreen"></span>
+                                                </li>
+                                                <li>
+                                                    <span class="color-item color-blue" data-theme="blue"></span>
+                                                </li>
+                                                <li>
+                                                    <span class="color-item color-purple" data-theme="purple"></span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <a href="">
+                                    <i class="fa fa-cog"></i> Customize </a>
+                            </li>
+                        </ul>
+                    </footer>
+                </aside>
+                <div class="sidebar-overlay" id="sidebar-overlay"></div>
+                <div class="sidebar-mobile-menu-handle" id="sidebar-mobile-menu-handle"></div>
+                <div class="mobile-menu-handle"></div>
+                <article class="content dashboard-page">
+                    {% block contenthead %}
+                    {% for message in get_flashed_messages() %}
+                        <div class="alert alert-warning">
+                            <div class="row sameheight-container">
+                            <div class="col col-12 col-sm-12 col-md-6 col-xl-12 stats-col">
+                                    <div class="card-block">
+                                        <div class="title-block">
+                                            <h4 class="title">{{ message }}</h4>
+                                        </div>
+                                    </div>
+                            </div>
                         </div>
-                      </li>
-                    </ul>
-                  </li>  
-              </ul>
+                        </div>
+                    {% endfor %}　　<!-- flash消息弹出 -->
+                    {% endblock %}
+                    {% block page_content %}
 
-              </div>
+                    {% endblock %}
+                    <section class="section">
 
-              {% endif %}               
-    </nav>                       
-</header>
-<!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar" style="position: fixed;left: 0px;">　
-<!-- 左侧拉伸栏 -->
-  <section class="sidebar">
-    <form action="{{url_for('main.search')}}" method="post" class="sidebar-form">
-        <div class="input-group">
-        {{g.search_form.hidden_tag()}}
-        <input type="text" name="search" class="form-control" placeholder="Search blog">
-         <span class="input-group-btn">
-          <button type="submit"  id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-         </span>
+                    </section>
+
+                </article>
+                <footer class="footer">
+                    <div class="footer-block buttons">
+                        <iframe class="footer-github-btn" src="https://ghbtns.com/github-btn.html?user=songjiyang&repo=flask_blog&type=star&count=true" frameborder="0" scrolling="0" width="140px" height="20px"></iframe>
+                    </div>
+                    <div class="footer-block author">
+                        <ul>
+                            <li> created by
+                                <a href="https://github.com/songjiyang">宋计洋</a>
+                            </li>
+                            <li> reference to
+                                <a href="https://github.com/modularcode/modular-admin-html">ModularAdmin</a>
+                            </li>
+                        </ul>
+                    </div>
+                </footer>
+                <div class="modal fade" id="modal-media">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Media Library</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                            </div>
+                            <div class="modal-body modal-tab-container">
+                                <ul class="nav nav-tabs modal-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#gallery" data-toggle="tab" role="tab">Gallery</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#upload" data-toggle="tab" role="tab">Upload</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content modal-tab-content">
+                                    <div class="tab-pane fade" id="gallery" role="tabpanel">
+                                        <div class="images-container">
+                                            <div class="row"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade active in" id="upload" role="tabpanel">
+                                        <div class="upload-container">
+                                            <div id="dropzone">
+                                                <form action="/" method="POST" enctype="multipart/form-data" class="dropzone needsclick dz-clickable" id="demo-upload">
+                                                    <div class="dz-message-block">
+                                                        <div class="dz-message needsclick"> Drop files here or click to upload. </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Insert Selected</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <div class="modal fade" id="confirm-modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">
+                                    <i class="fa fa-warning"></i> Alert</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure want to do this?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
         </div>
-    </form>
-<!--     <ul class="sidebar-menu">
-    <li class="header"><h4>&nbsp;输入标题搜索文章</h4></li> 
-    </ul> -->
+        <!-- Reference block for JS -->
+        <div class="ref" id="ref">
+            <div class="color-primary"></div>
+            <div class="chart">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+            </div>
+        </div>
 
-<!--     <form style="display: inline;" action="{{url_for('main.search')}}" method="post" name="search">
-    {{g.search_form.hidden_tag()}}{{g.search_form.search(size=20)}}<input type="submit" value="按标题搜索" placeholder="Search...">
-    </form> -->
-
-
-    <ul class="sidebar-menu">
-      <!-- <li class="header">推荐</li>  -->
-
-       
-      <li class="treeview">                      
-          <a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>全部分类</span> <i class="fa fa-angle-left pull-right"></i></a>          
-          <ul class="treeview-menu" style="display: block;">
-          {% for category in g.categorys %}
-            <li><a href= "{{ url_for('main.category', id=category.id) }}">{{category.name}}({{category.posts.count()}})</a></li>
-          {% endfor %} 
-          </ul>          
-      </li>
-
-      <li class="treeview">
-        <a href="#"><i class="fa fa-circle-o text-red"></i> <span>热门文章</span> <i class="fa fa-angle-left pull-right"></i></a>
-        <ul class="treeview-menu" style="display: block;">
-<!--                 最长26字    -->         
-        </ul>
-      </li>  
-      <li><a href="#top"><i class="fa fa-share"></i> <span>回到顶部</span></a></li> 
-    </ul>        
-  </section>
-</aside>  
-{% endblock %}
-
-
-{% block contenthead %}
-{% for message in get_flashed_messages() %}    
-<div class="alert alert-warning">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  {{ message }}
-</div>
-{% endfor %}　　<!-- flash消息弹出 -->
-{% endblock %}
-
-{% block footandrightnavbar %}
-  <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Email:<a href="mailto:352553647@qq.com">352553647@qq.com</a>  Power by Flask
-      <a href="#"><i class="fa fa-fw fa-bar-chart"></i>百度统计</a>
-      </b>
-    </div>
-    <strong>Code@<a href="https://github.com/ifwenvlook/blog.git">Github(参考此代码)</a></strong>
-    <a href="https://github.com/songjiyang" style="color:black" ><i class="fa fa-fw fa-github-square"></i></a>
-	<a href="https://weibo.com/u/3911056879?is_hot=1"style="color:black" ><i class="fa fa-fw fa-weibo"></i></a>
-	<a href="https://www.facebook.com/profile.php?id=100031954634454"style="color:black" ><i class="fa fa-fw fa-facebook-official"></i></a>
-  </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Create the tabs -->
-    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-      <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <!-- Home tab content -->
-      <div class="tab-pane" id="control-sidebar-home-tab">
-        <h3 class="control-sidebar-heading">Recent Activity</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-
-                <p>Will be 23 on April 24th</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-user bg-yellow"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-
-                <p>New phone +1(800)555-1234</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-
-                <p>nora@example.com</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-file-code-o bg-green"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-
-                <p>Execution time 5 seconds</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
-        <h3 class="control-sidebar-heading">Tasks Progress</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Custom Template Design
-                <span class="label label-danger pull-right">70%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Update Resume
-                <span class="label label-success pull-right">95%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Laravel Integration
-                <span class="label label-warning pull-right">50%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Back End Framework
-                <span class="label label-primary pull-right">68%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
-      </div>
-      <!-- /.tab-pane -->
-      <!-- Stats tab content -->
-      <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
-      <!-- /.tab-pane -->
-      <!-- Settings tab content -->
-      <div class="tab-pane" id="control-sidebar-settings-tab">
-        <form method="post">
-          <h3 class="control-sidebar-heading">General Settings</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Report panel usage
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              Some information about this general settings option
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Allow mail redirect
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              Other sets of options are available
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Expose author name in posts
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              Allow the user to show his name in blog posts
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <h3 class="control-sidebar-heading">Chat Settings</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Show me as online
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Turn off notifications
-              <input type="checkbox" class="pull-right">
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Delete chat history
-              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-            </label>
-          </div>
-          <!-- /.form-group -->
-        </form>
-      </div>
-      <!-- /.tab-pane -->
-    </div>
-  </aside>
-  <div class="control-sidebar-bg"></div>
-{% endblock %}
-
-{% block scripts %}
-{{ moment.include_jquery() }}
-{{ moment.include_moment() }}
-{{ moment.lang("zh-CN") }} 
-<script src="{{url_for('static',filename='js/jquery-2.2.3.min.js')}}"></script> 
-<script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>  
-<script src="{{url_for('static',filename='js/app.min.js')}}"></script>
-{% endblock %} 
-
+    </body>
+</html>

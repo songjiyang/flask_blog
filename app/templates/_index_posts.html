@@ -1,60 +1,87 @@
-<ul class="posts">
     {% for post in posts %}
-    <li class="post">
-        <div class="post-thumbnail">
 
-            <a href="{{ url_for('.user', username=post.author.username) }}">
-            {% if post.author.username == "wen" %} 
-                <img class="img-rounded profile-thumbnail" src="../static/img/me.jpg" style="width:40px;height:40px;">
-            {% else %}
-                <img class="img-rounded profile-thumbnail" src="../static/img/other.jpg" style="width:40px;height:40px;">
-            {% endif %}
-            </a>
-        </div>
-        <div class="post-content">
-            <div class="post-date">发布于:{{ moment(post.timestamp).fromNow() }} <br>
-            From <a href="#"> {{post.category.name}} </a></div>
-            <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>
-            <div class="post-head">
-            <a href="{{ url_for('.post', id=post.id) }}"><h2>{{ post.head }} <small></a>&nbsp;&nbsp;&nbsp;阅读:{{ post.visits }}&nbsp;收藏:{{ post.stared.__len__() }}</small></h2>
+    <li class="item">
+        <div class="item-row">
+            <div class="item-col fixed item-col-check">
+                <label class="item-check" id="select-all-items">
+                    <input type="checkbox" class="checkbox">
+                    <span></span>
+                </label>
             </div>
-            <div class="post-body">
-                <a style="text-decoration:none; color:black" href="{{ url_for('.post', id=post.id) }}">
-                {% if post.body_html %}
-                    {{ post.head_html | safe }}<br/>
-                    {% if post.body[200] %}
-                    {{ post.body_html[0:200] | safe }}....
-                    {% else %}
-                    {{ post.body_html | safe }}
-                    {% endif %}
-                {% else %}
-                    {{ post.head }}<br/>
-                    {% if post.body[200] %}
-                    {{ post.body[0:200]}}...
-                    {% else %}
-                    {{ post.body}}
-                    {% endif %}                
-                {% endif %}
+            <div class="item-col fixed item-col-img md">
+                <a href="item-editor.html">
+                    <div class="item-img rounded" style="background-image: url(https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg)"></div>
                 </a>
             </div>
-            <div class="post-footer">
-                {% if current_user == post.author %}
-                <a href="{{ url_for('.edit', id=post.id) }}">
-                    <span class="label label-default">编辑</span>
-                </a>
-                {% elif current_user.is_administrator() %}
-                <a href="{{ url_for('.edit', id=post.id) }}">
-                    <span class="label label-danger">编辑 [Admin权限]</span>
-                </a>
+            <div class="item-col fixed pull-left item-col-title">
+                <div class="item-heading">Name</div>
+                <div>
+                    <a href="item-editor.html" class="">
+                        <h4 class="item-title">{{ post.head or 1 }}</h4>
+                    </a>
+                </div>
+            </div>
+            <div class="item-col item-col-sales">
+                <div class="item-heading">Sales</div>
+                <div> {{ post.visits }} </div>
+            </div>
+            <div class="item-col item-col-stats no-overflow">
+                <div class="item-heading">Stats</div>
+                <div class="no-overflow">
+                    <div class="item-stats sparkline" data-type="bar"></div>
+                </div>
+            </div>
+            <div class="item-col item-col-category no-overflow">
+                <div class="item-heading">Category</div>
+                <div class="no-overflow">
+                    <a href="">{{post.category.name}}</a>
+                </div>
+            </div>
+            <div class="item-col item-col-author">
+                <div class="item-heading">Author</div>
+                <div class="no-overflow">
+                    <a href="">{{ post.author.name or '' }}</a>
+                </div>
+            </div>
+            <div class="item-col item-col-date">
+                <div class="item-heading">Comments</div>
+                <div class="no-overflow"> {{ post.comments.count() }} </div>
+            </div>
+            <div class="item-col item-col-date">
+                <div class="item-heading">Published</div>
+                <div class="no-overflow"> {{ moment(post.timestamp).fromNow() }} </div>
+            </div>
+            <div class="item-col fixed item-col-actions-dropdown">
+                <div class="item-actions-dropdown">
+                    <a class="item-actions-toggle-btn">
+                        <span class="inactive">
+                            <i class="fa fa-cog"></i>
+                        </span>
+                        <span class="active">
+                            <i class="fa fa-chevron-circle-right"></i>
+                        </span>
+                    </a>
+                    {% if current_user == post.author %}
+                    <div class="item-actions-block">
+                        <ul class="item-actions-list">
+                            <li>
+                                <a class="remove" href="{{ url_for('.edit', id=post.id) }}" data-toggle="modal" data-target="#confirm-modal">
+                                    <i class="fa fa-trash-o "></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="edit" href="{{ url_for('.edit', id=post.id) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="edit" href="{{ url_for('.post', id=post.id) }}#comments">
+                                    <i class="fa fa-comment"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 {% endif %}
-<!--                 <a href="{{ url_for('.post', id=post.id) }}">
-                    <span class="label label-default">阅读全文</span>
-                </a> -->
-                <a href="{{ url_for('.post', id=post.id) }}#comments">
-                    <span class="label label-primary">{{ post.comments.count() }} 评论</span>
-                </a>
             </div>
         </div>
     </li>
     {% endfor %}
-</ul>

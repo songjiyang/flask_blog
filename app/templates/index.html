@@ -18,35 +18,94 @@
 </section> 
 {% endblock %}
 
-{% block contenthead %}
-{{ super() }}
-<section class="content-header" style="padding:15px 0 0 0;">
-<!--   <h1>
-    Dashboard
-    <small>Control panel</small>
-  </h1> -->
-  <ol class="breadcrumb">
-    <li><a href="{{ url_for('main.index') }}"><i class="fa fa-fw fa-home"></i>首页</a></li>
-    <li class="active"></li>
-  </ol>
-</section>
-{% endblock %}
 
 {% block page_content %} <!-- post页面等等 -->
-<div class="post-tabs" style= "padding:15px;margin-right:50px;margin-left:50px;">
-    <ul class="nav nav-tabs">
-        <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">全部</a></li>
-        {% if current_user.is_authenticated %}
-        <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">我的关注</a></li>
-        {% endif %}
-        <li style="float: right" ><button class="btn btn-block btn-info btn-lg"><a style="color:white" href="{{ url_for('.writepost') }}"><i class="fa fa-edit"></i>新文章</a></button></li>
-    </ul>
-    {% include '_index_posts.html' %}
-</div>
+<section class="section">
+                        <div class="row sameheight-container">
+                            <div class="col-xl-12">
+                                <div class="card sameheight-item items" data-exclude="xs,sm,lg">
+                                    <div class="card-header bordered">
+                                        <div class="header-block">
+                                            <h3 class="title"> 文章列表 </h3>
+                                            <a href="{{ url_for('.writepost') }}" class="btn btn-primary btn-sm">新文章 </a>
+                                        </div>
+                                        <div class="header-block pull-right">
+                                            <label class="search">
+                                                <input class="search-input" placeholder="search...">
+                                                <i class="fa fa-search search-icon"></i>
+                                            </label>
+                                            <div class="pagination">
+                                                <a href="" class="btn btn-primary btn-sm">
+                                                    <i class="fa fa-angle-up"></i>
+                                                </a>
+                                                <a href="" class="btn btn-primary btn-sm">
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="item-list striped">
+                                        <li class="item item-list-header">
+                                            <div class="item-row">
+                                                <div class="item-col fixed item-col-check">
+                                                    <label class="item-check" id="select-all-items">
+                                                        <input type="checkbox" class="checkbox">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="item-col item-col-header fixed item-col-img md">
+                                                    <div>
+                                                        <span>Media</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-col item-col-header item-col-title">
+                                                    <div>
+                                                        <span>Name</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-col item-col-header item-col-sales">
+                                                    <div>
+                                                        <span>Sales</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-col item-col-header item-col-stats">
+                                                    <div class="no-overflow">
+                                                        <span>Stats</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-col item-col-header item-col-category">
+                                                    <div class="no-overflow">
+                                                        <span>Category</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-col item-col-header item-col-author">
+                                                    <div class="no-overflow">
+                                                        <span>Author</span>
+                                                    </div>
+                                                </div>
+                                                 <div class="item-col item-col-header item-col-author">
+                                                    <div class="no-overflow">
+                                                        <span>Comments</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-col item-col-header item-col-date">
+                                                    <div>
+                                                        <span>Published</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-col item-col-header fixed item-col-actions-dropdown"> </div>
+                                            </div>
+                                        </li>
+                                        {% include '_index_posts.html' %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 {% if pagination %}
-<div class="pagination">
+<nav class="text-right">
     {{ macros.pagination_widget(pagination, '.index') }}
-</div>
+</nav>
 {% endif %}
 {% endblock %}
 
