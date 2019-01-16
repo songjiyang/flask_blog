@@ -78,6 +78,7 @@
                                 <div class="dropdown-menu notifications-dropdown-menu">
                                     <ul class="notifications-container">
                                         <li>
+                                            {% if current_user.lastmessage() %}
                                             <a href="" class="notification-item">
                                                 <div class="img-col">
                                                     <div class="img" style="background-image: url('/static/assets/faces/8.jpg')"></div>
@@ -88,37 +89,13 @@
                                                         <span class="accent">{{ current_user.lastmessage().body }}</span>. </p>
                                                 </div>
                                             </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class="notification-item">
-                                                <div class="img-col">
-                                                    <div class="img" style="background-image: url('assets/faces/5.jpg')"></div>
-                                                </div>
-                                                <div class="body-col">
-                                                    <p>
-                                                        <span class="accent">Amaya Hatsumi</span> started new task:
-                                                        <span class="accent">Dashboard UI design.</span>. </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class="notification-item">
-                                                <div class="img-col">
-                                                    <div class="img" style="background-image: url('/static/assets/faces/8.jpg')"></div>
-                                                </div>
-                                                <div class="body-col">
-                                                    <p>
-                                                        <span class="accent">Andy Nouman</span> deployed new version of
-                                                        <span class="accent">NodeJS REST Api V3</span>
-                                                    </p>
-                                                </div>
-                                            </a>
+                                            {% endif %}
                                         </li>
                                     </ul>
                                     <footer>
                                         <ul>
                                             <li>
-                                                <a href=""> View All </a>
+                                                <a href="{{ url_for('main.shownotice') }}"> View All </a>
                                             </li>
                                         </ul>
                                     </footer>

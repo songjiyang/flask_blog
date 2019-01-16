@@ -185,11 +185,13 @@ class User(UserMixin, db.Model):
                 total=total+1
         return total
     def lastmessage(self):
-        last=self.messageds[-1]
-        return last
+        if self.messageds.count():
+            last=self.messageds[-1]
+            return last
     def lastmessageform(self):
-        lastform=self.messageds[-1].author
-        return lastform
+        if self.messageds.count():
+            lastform=self.messageds[-1].author
+            return lastform
 
 
 
