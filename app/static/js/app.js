@@ -317,7 +317,7 @@ $(function() {
 		var $editor = $(this).find(".editor");
 		var $toolbar = $(this).find(".toolbar");
 
-		var editor = new Quill($editor.get(0), {
+		var quill = new Quill($editor.get(0), {
 			theme: 'snow',
 			// modules: {
 			// 	toolbar: toolbarOptions
@@ -326,11 +326,33 @@ $(function() {
 				toolbar: $toolbar.get(0)
 			}
 		});
+		raw_markdown = $editor.text()
+        var md = window.markdownit();
+        md.set({
+          html: true
+        });
+        var result = md.render(raw_markdown);
+        quill.clipboard.dangerouslyPasteHTML(result + "\n");
 
+        // Need to do a first pass when we're passing in initial data.
+        var html = quill.container.firstChild.innerHTML;
+        $("#body").text(html);
+        $("#markdown").text(toMarkdown(html));
+        $("#html").text(html);
+        $("#output-quill").html(html);
+        $("#output-markdown").html(result);
 		// var $toolbar = $(this).find(".toolbar");
 		// var $editor = $(this).find(".editor");
-
-
+        quill.on("text-change", function(delta, source) {
+              var html = quill.container.firstChild.innerHTML;
+              var markdown = toMarkdown(html);
+              var rendered_markdown = md.render(markdown);
+              $("#body").text(html);
+              $("#markdown").text(markdown);
+              $("#html").text(html);
+              $("#output-quill").html(html);
+              $("#output-markdown").html(rendered_markdown);
+         });
 		// var editor = new Quill($editor.get(0), {
 		// 	theme: 'snow'
 		// });

@@ -327,6 +327,7 @@ $(function() {
 			}
 		});
 
+
 		// var $toolbar = $(this).find(".toolbar");
 		// var $editor = $(this).find(".editor");
 
